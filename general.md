@@ -21,4 +21,11 @@
     - application/json
     - multipart/form-data
     - application/ x-www-urlencoded
-    
+
+
+# Git
+### Tracking
+    - changes,
+
+git add . to add the files changed
+git commit -m "Your Message"
