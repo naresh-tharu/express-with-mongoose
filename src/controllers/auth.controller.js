@@ -56,6 +56,13 @@ class authController {
             let token = req.params.token
             let payload = req.body;
             await userSrv.validatePassword(payload);
+            let updateUserResponse = await userSrv.updateUser({
+                password: payload.password, 
+                status:'active', 
+                activationToken:null
+            },{
+                activationToken:token
+            })
         } catch (error) {
             console.log("Activation Error", error);
             next({ code: 400, msg: error })

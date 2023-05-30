@@ -84,6 +84,14 @@ class UserService extends MongoDBService {
             throw err;
         }
     }
+    updateUser = async(data, filter)=>{
+        try{
+let response = await this._db.collection("users").updateOne(filter)
+        }catch(exception){
+            throw exception;
+
+        }
+    }
 }
 
 const userSrv = new UserService;
