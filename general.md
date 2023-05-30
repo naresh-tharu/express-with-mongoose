@@ -29,3 +29,6 @@
 
 git add . to add the files changed
 git commit -m "Your Message"
+git branch to check the branch
+git push origin main:main
+

@@ -5,7 +5,7 @@ class UserService extends MongoDBService {
         super();
         // this.collection = this._db.collection("users");
     }
-    validateRegister = async(data) => {
+    validateRegister = async (data) => {
         try {
             // if (!data.name) {
             //     throw ({ code: 400, msg: "Name is required", data: null })
@@ -27,21 +27,19 @@ class UserService extends MongoDBService {
                 name: Joi.string().min(3).max(30).required(),
                 // email: Joi.string().email().required(),
                 email: Joi.string()
-                .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+                    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
                 phone: Joi.string().allow(null, ''),
-                //TODO: Regex validation required
-                password:Joi.string().min(8).max(25).required(),
+                // password:Joi.string().min(8).max(25).required(),
                 role: Joi.string().pattern(/customer|seller/).default('customer'),
                 image: Joi.string()
             });
-            let response = await rules.validateAsync(data) ;
+            let response = await rules.validateAsync(data);
             if (response.error) {
                 throw response.error//.details[0].message;
             } else {
                 return data;
             }
         } catch (exception) {
-            // console.log(exception)
             throw exception;
         }
     }
@@ -52,11 +50,22 @@ class UserService extends MongoDBService {
                 password: Joi.string().required()
             })
             let response = await rules.validateAsync(credentials);
-            return response; 
-          
+            return response;
+
         } catch (exception) {
             console.log("ExceptionLogin", exception)
             throw exception.details[0].message
+        }
+    }
+    validatePassword = async (password) => {
+        try {
+            let rules = Joi.object({
+                password: Joi.string().min(3).max(25).required(),
+                confirmPassword: Joi.string().valid(Joi.ref("password")).required()
+            })
+            let response = await rules.validateAsync(password);
+        } catch(exception){
+            throw exception.detail[0].message;
         }
     }
     createUser = async (data) => {
