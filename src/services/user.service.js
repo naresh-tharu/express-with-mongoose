@@ -64,7 +64,7 @@ class UserService extends MongoDBService {
                 confirmPassword: Joi.string().valid(Joi.ref("password")).required()
             })
             let response = await rules.validateAsync(password);
-        } catch(exception){
+        } catch (exception) {
             throw exception.detail[0].message;
         }
     }
@@ -84,12 +84,23 @@ class UserService extends MongoDBService {
             throw err;
         }
     }
-    updateUser = async(data, filter)=>{
-        try{
-let response = await this._db.collection("users").updateOne(filter)
-        }catch(exception){
+    updateUser = async (data, filter) => {
+        try {
+            let response = await this._db.collection("users").updateOne(filter, {
+                $set: data
+            })
+            return response;
+        } catch (exception) {
             throw exception;
 
+        }
+    }
+    deleteUser = async (filter) => {
+        try {
+            let response = await this._db.collection("users").deleteOne(filter);
+            return response;
+        } catch (exception) {
+            throw exception;
         }
     }
 }

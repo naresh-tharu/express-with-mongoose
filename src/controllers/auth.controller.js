@@ -63,6 +63,16 @@ class authController {
             },{
                 activationToken:token
             })
+            if(updateUserResponse.modifiedCount){
+                res.json({
+                    result: updateUserResponse,
+                    status:true,
+                    msg:"User activated successfully",
+                    meta:null
+                })
+            }else{
+                throw "The token is broken or already activated";
+            }
         } catch (error) {
             console.log("Activation Error", error);
             next({ code: 400, msg: error })
