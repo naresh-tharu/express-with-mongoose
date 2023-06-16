@@ -1,4 +1,5 @@
 const express = require("express");
+require("./config/mongo.config");
 const routes = require("./routes");
 const routesV2 = require("./routes/v2.routes");
 const { MulterError } = require("multer");

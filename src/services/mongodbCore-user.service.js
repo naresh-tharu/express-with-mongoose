@@ -1,7 +1,10 @@
 const Joi = require("joi");
-const UserModel = require("../model/users.model");
-class UserService {
-
+const MongoDBService = require("./mongodb.service");
+class UserService extends MongoDBService {
+    constructor() {
+        super();
+        // this.collection = this._db.collection("users");
+    }
     validateRegister = async (data) => {
         try {
             // if (!data.name) {
@@ -19,6 +22,7 @@ class UserService {
             // if (data.role !== 'seller' && data.role !== 'customer') {
             //     throw ({ code: 400, msg: "User can be a seller or customer", data: null })
             // }
+
             let rules = Joi.object({
                 name: Joi.string().min(3).max(30).required(),
                 email: Joi.string().email().required(),
@@ -64,17 +68,15 @@ class UserService {
     }
     createUser = async (data) => {
         try {
-            // let response = await this._db.collection('users').insertOne(data);
-            let user = new UserModel(data);
-            return await user.save()// store the data in db
+            let response = await this._db.collection('users').insertOne(data);
+            return response;
         } catch (err) {
             throw err
         }
     }
     getUserByEmail = async (userCred) => {
         try {
-            // let userDetail = await this._db.collection("users").findOne(userCred);
-            let userDetail = await UserModel.findOne(userCred)
+            let userDetail = await this._db.collection("users").findOne(userCred); 
             return userDetail;
         } catch (err) {
             throw err;
@@ -82,11 +84,8 @@ class UserService {
     }
     updateUser = async (data, filter) => {
         try {
-            // let response = await this._db.collection("users").updateOne(filter, {
-            //     $set: data
-            // })
-            let response = await UserModel.updateOne(filter, {
-                $set:data
+            let response = await this._db.collection("users").updateOne(filter, {
+                $set: data
             })
             return response;
         } catch (exception) {
@@ -96,8 +95,7 @@ class UserService {
     }
     deleteUser = async (filter) => {
         try {
-            // let response = await this._db.collection("users").deleteOne(filter);
-            let response = await UserModel.deleteOne(filter)
+            let response = await this._db.collection("users").deleteOne(filter);
             return response;
         } catch (exception) {
             throw exception;

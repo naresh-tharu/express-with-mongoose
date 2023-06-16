@@ -1,9 +1,6 @@
 const dotenv = require("dotenv")
 dotenv.config();
-const Joi = require("joi");
 const userSrv = require("../services/user.service");
-
-const { MongoClient } = require("mongodb");
 const helpers = require("../../config/helpers");
 
 class authController {
