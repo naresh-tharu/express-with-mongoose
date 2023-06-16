@@ -25,9 +25,7 @@ class UserService extends MongoDBService {
 
             let rules = Joi.object({
                 name: Joi.string().min(3).max(30).required(),
-                // email: Joi.string().email().required(),
-                email: Joi.string()
-                    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+                email: Joi.string().email().required(),
                 phone: Joi.string().allow(null, ''),
                 // password:Joi.string().min(8).max(25).required(),
                 role: Joi.string().pattern(/customer|seller/).default('customer'),
@@ -78,7 +76,7 @@ class UserService extends MongoDBService {
     }
     getUserByEmail = async (userCred) => {
         try {
-            let userDetail = await this._db.collection("users").findOne(userCred); //[{}]
+            let userDetail = await this._db.collection("users").findOne(userCred); 
             return userDetail;
         } catch (err) {
             throw err;
