@@ -1,6 +1,6 @@
 const authCheck = (req, res, next) => {
     //TODO: Check user login here
-    let success = true;
+    let success = false;
     if (success) {
         next()
     } else {

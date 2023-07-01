@@ -10,15 +10,26 @@ class authController {
             let data = req.body;
             await userSrv.validateLogin(data)
             let userDetail = await userSrv.getUserByEmail(data);
-            if (userDetail.status && userDetail.status === 'active') {
-                res.json({
-                    result: userDetail,
-                    status: true,
-                    msg: "User logged in successfully",
-                    meta: null
-                })
-            } else {
-                throw "User not activated";
+
+
+            if (userDetail) {
+                //password check
+                if (bcrypt.compareSync(data.password, userDetail.password)) {
+                    if (userDetail.status && userDetail.status === 'active') {
+                        res.json({
+                            result: userDetail,
+                            status: true,
+                            msg: "User logged in successfully",
+                            meta: null
+                        })
+                    } else {
+                        next({ code: 400, msg: "User not activated" })
+                    }
+                } else {
+                    next({ code: 400, msg: "Credentials does not match" })
+                }
+            }else{
+                next({code:400, msg:"User does not exists"})
             }
         } catch (exception) {
             next({ code: 400, msg: exception })
@@ -30,9 +41,9 @@ class authController {
             if (req.file) {
                 data.image = req.file.filename;
             }
-            
+
             userSrv.validateRegister(data);
-            
+
             data.status = 'inactive';
             data.activationToken = helpers.randomString(100);
             //TODO: send an email to registered account for the activation with token
@@ -48,7 +59,7 @@ class authController {
             next({ code: 400, msg: "Registration error" + exception, data: req.body })
         }
     }
-    activateUser = async(req, res, next) => {
+    activateUser = async (req, res, next) => {
         try {
             let token = req.params.token
             let payload = req.body;
@@ -57,22 +68,22 @@ class authController {
             //bcrypt 
             //str=> abc=>bcrypt()=>xyz, cde, mno
             //bcrypt, bcryptjs
-            let password = bcrypt.hashSync(payload.password,10);
+            let password = bcrypt.hashSync(payload.password, 10);
             let updateUserResponse = await userSrv.updateUser({
-                password: password, 
-                status:'active', 
-                activationToken:null
-            },{
-                activationToken:token
+                password: password,
+                status: 'active',
+                activationToken: null
+            }, {
+                activationToken: token
             })
-            if(updateUserResponse.modifiedCount){
+            if (updateUserResponse.modifiedCount) {
                 res.json({
                     result: updateUserResponse,
-                    status:true,
-                    msg:"User activated successfully",
-                    meta:null
+                    status: true,
+                    msg: "User activated successfully",
+                    meta: null
                 })
-            }else{
+            } else {
                 throw "The token is broken or already activated";
             }
         } catch (error) {
