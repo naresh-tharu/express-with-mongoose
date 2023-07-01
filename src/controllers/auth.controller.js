@@ -29,9 +29,9 @@ class authController {
             if (req.file) {
                 data.image = req.file.filename;
             }
-            //data validation
-            //name, email, phone, role
+            
             userSrv.validateRegister(data);
+            
             data.status = 'inactive';
             data.activationToken = helpers.randomString(100);
             //TODO: send an email to registered account for the activation with token
@@ -48,11 +48,13 @@ class authController {
         }
     }
     activateUser = async(req, res, next) => {
-
         try {
             let token = req.params.token
             let payload = req.body;
             await userSrv.validatePassword(payload);
+
+            //bcrypt 
+            //str=> abc=>bcrypt()=>xyz, cde, mno
             let updateUserResponse = await userSrv.updateUser({
                 password: payload.password, 
                 status:'active', 
