@@ -1,8 +1,10 @@
 const dotenv = require("dotenv")
 dotenv.config();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const userSrv = require("../services/user.service");
 const helpers = require("../../config/helpers");
+
 
 class authController {
     login = async (req, res, next) => { //1mb, 10gb => 10*1024 = 10000, throttle=>60-70 
@@ -16,6 +18,17 @@ class authController {
                 //password check
                 if (bcrypt.compareSync(data.password, userDetail.password)) {
                     if (userDetail.status && userDetail.status === 'active') {
+                        let token = jwt.sign(
+                            { id: userDetail._id },
+                            process.env.JWT_SECRET,
+                            { expiresIn: "1 day" }
+                        )
+                        let refreshToken = jwt.sign({
+                            id: userDetail._id
+                        }, process.env.JWT_SECRET, {
+                            expiresIn: "3 days"
+                        })
+                        
                         res.json({
                             result: userDetail,
                             status: true,
@@ -28,8 +41,8 @@ class authController {
                 } else {
                     next({ code: 400, msg: "Credentials does not match" })
                 }
-            }else{
-                next({code:400, msg:"User does not exists"})
+            } else {
+                next({ code: 400, msg: "User does not exists" })
             }
         } catch (exception) {
             next({ code: 400, msg: exception })
