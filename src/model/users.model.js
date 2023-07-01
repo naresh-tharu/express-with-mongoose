@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema({
 },{
     autoIndex:true,
     autoCreate:true,
-    Timestamp:true
+    timestamps:true
 })
 
 const UserModel = mongoose.model("User", UserSchema)

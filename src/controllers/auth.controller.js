@@ -1,5 +1,6 @@
 const dotenv = require("dotenv")
 dotenv.config();
+const bcrypt = require("bcryptjs");
 const userSrv = require("../services/user.service");
 const helpers = require("../../config/helpers");
 
@@ -55,8 +56,10 @@ class authController {
 
             //bcrypt 
             //str=> abc=>bcrypt()=>xyz, cde, mno
+            //bcrypt, bcryptjs
+            let password = bcrypt.hashSync(payload.password,10);
             let updateUserResponse = await userSrv.updateUser({
-                password: payload.password, 
+                password: password, 
                 status:'active', 
                 activationToken:null
             },{
