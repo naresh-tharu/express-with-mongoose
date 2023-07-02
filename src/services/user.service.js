@@ -25,7 +25,7 @@ class UserService {
                 phone: Joi.string().allow(null, ''),
                 // password:Joi.string().min(8).max(25).required(),
                 role: Joi.string().pattern(/customer|seller/).default('customer'),
-                address:Joi.string(),
+                address: Joi.string(),
                 image: Joi.string()
             });
             let response = await rules.validateAsync(data);
@@ -75,7 +75,7 @@ class UserService {
     getUserByEmail = async (userCred) => {
         try {
             // let userDetail = await this._db.collection("users").findOne(userCred);
-            let userDetail = await UserModel.findOne({email:userCred.email})
+            let userDetail = await UserModel.findOne({ email: userCred.email })
             return userDetail;
         } catch (err) {
             throw err;
@@ -87,7 +87,7 @@ class UserService {
             //     $set: data
             // })
             let response = await UserModel.updateOne(filter, {
-                $set:data
+                $set: data
             })
             return response;
         } catch (exception) {
@@ -103,6 +103,15 @@ class UserService {
         } catch (exception) {
             throw exception;
         }
+    }
+    getUserById = async (id) => {
+        try {
+            let userDetail = await UserModel.findById(id, {password:0});
+            return userDetail;
+        } catch (err) {
+            throw err;
+        }
+
     }
 }
 

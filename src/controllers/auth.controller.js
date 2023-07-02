@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userSrv = require("../services/user.service");
 const helpers = require("../../config/helpers");
+const emailObj = require("../services/mailer.service");
 
 
 class authController {
@@ -28,9 +29,15 @@ class authController {
                         }, process.env.JWT_SECRET, {
                             expiresIn: "3 days"
                         })
-                        
+
+
                         res.json({
-                            result: userDetail,
+                            result: {
+                                accessToken: token,
+                                refreshToken: refreshToken,
+                                tokenType: "bearer",
+                                user: userDetail
+                            },
                             status: true,
                             msg: "User logged in successfully",
                             meta: null
@@ -60,6 +67,20 @@ class authController {
             data.status = 'inactive';
             data.activationToken = helpers.randomString(100);
             //TODO: send an email to registered account for the activation with token
+            emailObj.sendEmail(
+                data.email,
+                "Activate your account!",
+                `<strong>Dear ${data.name}, </strong>
+                <p>Your account has been successfully registered.</p>
+                <p>Please click the link below or copy link to activate your account:</p>
+                <a href="https://localhost:3000/activate/${data.activationToken}">https://localhost:3000/activate/${data.activationToken}</a> 
+                <p>Thank you for your support</p>
+                <p>Regards,</p>
+                <p>No Reply, Ecom 19</p>
+                <small>Please do not reply to this email.</small>
+                `
+
+            )
 
             let response = await userSrv.createUser(data)
             res.json({
@@ -115,10 +136,45 @@ class authController {
     }
     getLoggedInUser = (req, res, next) => {
         res.json({
-            data: "Hello World",
+            data: req.authUser,
             msg: "Acess Granted",
             status: true,
             meta: null
+        })
+    }
+    refreshToken = async (req, res, next) => {
+        try {
+            let authUser = req.authUser;
+            let token = jwt.sign(
+                { id: authUser._id },
+                process.env.JWT_SECRET,
+                { expiresIn: "1 day" }
+            )
+            let refreshToken = jwt.sign({
+                id: authUser._id
+            }, process.env.JWT_SECRET, {
+                expiresIn: "3 days"
+            })
+            res.json({
+                data: {
+                    token: token,
+                    refreshToken: refreshToken,
+                    tokenType: "bearer",
+
+                },
+                status: true,
+                msg: "Refresh Token",
+                meta: null
+            })
+        } catch (error) {
+            console.log("Refresh Token: ", error)
+        }
+    }
+    getAdmin = async (req, res, next) => {
+        res.json({
+            data: req.authUser,
+            status: true,
+            msg: "Admin User"
         })
     }
 }
