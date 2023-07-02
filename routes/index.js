@@ -1,8 +1,9 @@
 const app = require("express").Router();
 // const authCheck = require("../src/middleware/auth-check.middleware");
 const authRoutes = require("./auth.routes");
-
+const bannerRoutes = require("./banner.routes")
 app.use("/auth",authRoutes);
+app.use("/banner", bannerRoutes)
 
 // const app = express();
 // const app = express.Router();

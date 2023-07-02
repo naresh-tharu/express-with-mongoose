@@ -79,7 +79,6 @@ class authController {
                 <p>No Reply, Ecom 19</p>
                 <small>Please do not reply to this email.</small>
                 `
-
             )
 
             let response = await userSrv.createUser(data)
