@@ -2,8 +2,7 @@
 const isAdmin = (req, res, next) => {
     try {
         let user = req.authUser
-        if (user.role =='admin'){
-
+        if (user.role ==='admin'){
             next()
         } else {
             next({ code: 403, msg: "You do not have privilege to access this request" })
@@ -16,7 +15,7 @@ const isAdmin = (req, res, next) => {
 const isSeller = (req, res, next) => {
     try {
         let user = req.authUser
-        if (user.role == 'seller') {
+        if (user.role === 'seller') {
             next()
         } else {
             next({ code: 403, msg: "You do not have privilege to access this request" })
@@ -29,7 +28,7 @@ const isSeller = (req, res, next) => {
 const isCustomer = (req, res, next) => {
     try {
         let user = req.authUser
-        if (user.role == 'customer') {
+        if (user.role === 'customer') {
             next()
         } else {
             next({ code: 403, msg: "You do not have privilege to access this request" })
@@ -41,8 +40,8 @@ const isCustomer = (req, res, next) => {
 const isAdminOrSeller = (req, res, next) => {
     try {
         let user = req.authUser
-        // if (['admin', 'seller'].includes(user.role)) {
-            if(user.role =='admin' || user.role=='seller'){
+        if (['admin', 'seller'].includes(user.role)) {
+            // if(user.role =='admin' || user.role=='seller'){
 
             next()
         } else {

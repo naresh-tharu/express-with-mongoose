@@ -13,7 +13,7 @@ router.route("/")
     .post(authCheck, isAdmin, dirPath, uploader.single('image'), bannerCtrl.createBanner)
     .get(authCheck, isAdmin, bannerCtrl.listAllBanners)
 
-router.get('/active', authCheck, isAdmin, bannerCtrl.listAllBannersForHomepage)
+router.get('/active', bannerCtrl.listAllBannersForHomepage)
 
 router.route("/:id")
     .patch(authCheck, isAdmin, dirPath, uploader.single('image'), bannerCtrl.updateBannerById)

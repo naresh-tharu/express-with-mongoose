@@ -19,11 +19,11 @@ const UserSchema = new mongoose.Schema({
         type:String,
         
     },
-    role:[{
+    role:{
         type:String,
         enum:['admin', 'seller', 'customer'],
         default:"customer"
-    }],
+    },
     status:{
         type:String,
         enum:['active', 'inactive'],

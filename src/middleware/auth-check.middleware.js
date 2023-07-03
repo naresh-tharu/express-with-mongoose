@@ -33,8 +33,10 @@ const authCheck = async(req, res, next) => {
             next({ code: 401, msg: "User not loggin..." })
         }
     } catch (exception) {
-        console.log("JWT: ", exception)
-        next({ status: 401, msg: "Unauthorized access" })
+if(exception instanceof jwt.TokenExpiredError){
+    next({code:401, msg:"Token expired"})
+}
+        next({ code: 401, msg: "Unauthorized access" })
     }
 }
 module.exports = authCheck;

@@ -4,21 +4,6 @@ class UserService {
 
     validateRegister = async (data) => {
         try {
-            // if (!data.name) {
-            //     throw ({ code: 400, msg: "Name is required", data: null })
-            // }
-            // if (!data.email) {
-            //     throw ({ code: 400, msg: "Email is required", data: null })
-            // }
-            // if (!data.phone) {
-            //     throw ({ code: 400, msg: "Phone is required", data: null })
-            // }
-            // if (!data.role) {
-            //     throw ({ code: 400, msg: "Role is required", data: null })
-            // }
-            // if (data.role !== 'seller' && data.role !== 'customer') {
-            //     throw ({ code: 400, msg: "User can be a seller or customer", data: null })
-            // }
             let rules = Joi.object({
                 name: Joi.string().min(3).max(30).required(),
                 email: Joi.string().email().required(),
